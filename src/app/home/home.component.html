@@ -1,11 +1,13 @@
 <h1>Server Manager App</h1>
 <p>Manage your Servers and Users</p>
-<form (ngSubmit)="login()">
+<form (ngSubmit)="login()" *ngIf="!isLoggedIn">
     Email: <br> <input type="email" name="email" id="email" [(ngModel)]="email"> <br><br>
     Password: <br> <input type="password" name="password" id="password" [(ngModel)]="password"> 
     <button class="btn btn-info mx-2"  type="submit">Login</button> 
-    <button class="btn btn-outline-info" (click)="onlogout()">Logout</button>
+   
 </form><br>
+
+<button class="btn btn-outline-info" (click)="onlogout()" *ngIf="isLoggedIn">Logout</button>
 
 
 

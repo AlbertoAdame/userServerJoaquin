@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { User } from '../servers/interfaces/client.interface';
 
 @Component({
   selector: 'app-home',
@@ -10,26 +9,36 @@ import { User } from '../servers/interfaces/client.interface';
 export class HomeComponent implements OnInit {
 
   email:string=""
-  password:string=""
+  password:string="";
+  isLoggedIn!:boolean;
 
   constructor(private router:Router, private authService:AuthService) { }
 
   ngOnInit(): void {
-  }
-
-  onlogin() {
-    this.authService.login(this.email);
+    this.isLoggedIn = this.authService.isAuthenticated();
   }
 
   onlogout() {
     this.authService.logout();
+    this.isLoggedIn=false;
   }
 
-  login(){
-    this.authService.login(this.email)
-    console.log("entra")
-
-    
+  login():void{
+    console.log('Email: ', this.email, 'Password: ', this.password)
+    this.authService.login(this.email,this.password)
+    .subscribe({
+      next: (resp) => {
+        if (resp) {
+          this.isLoggedIn=true;
+          this.router.navigate(['/servers']);
+        }
+        else {
+          this.email=''; 
+          this.password='';
+          confirm('Email o contraseña incorrectos');
+        }
+      }
+    })
   }
 
 }

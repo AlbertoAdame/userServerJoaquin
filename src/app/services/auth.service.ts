@@ -23,6 +23,8 @@ export class AuthService {
     return localStorage.getItem('authenticated')==='true'
   }
 
+// El método login es lo que deberemos editar para jwt
+
   login(email:string, password:string):Observable<boolean> {
     //Recuperamos el usuario y comprobamos que la contraseña sea correcta
     return this.userService.getUserByEmail(email)

@@ -8,7 +8,7 @@ import { SharedModule } from './shared/shared.module';
 import { UsersModule } from './users/users.module';
 import { ServersModule } from './servers/servers.module';
 import { HomeComponent } from './home/home.component';
-import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuard } from '../auth-guard.service';
 
 import { ServersService } from './servers/services/servers.service';
 import { AuthService } from './services/auth.service';
@@ -28,7 +28,7 @@ import { FormsModule } from '@angular/forms';
     ServersModule,
     FormsModule
   ],
-  providers: [ServersService, AuthGuardService, AuthService],
+  providers: [ServersService, AuthGuard, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

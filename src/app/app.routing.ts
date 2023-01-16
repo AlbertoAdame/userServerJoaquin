@@ -6,7 +6,7 @@ import { UsersComponent } from './users/users/users.component';
 import { ServersComponent } from './servers/servers/servers.component';
 import { EditServerComponent } from './servers/edit-server/edit-server.component';
 import { ServerComponent } from './servers/server/server.component';
-import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuard } from '../auth-guard.service';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 
 const routes: Routes = [
@@ -41,18 +41,18 @@ const routes: Routes = [
     { 
         path: 'servers', 
         // canActivate:[AuthGuardService], 
-        canActivateChild: [AuthGuardService],
+        canActivateChild: [AuthGuard],
         component: ServersComponent, 
         children: 
             [
                 { 
                     path: ':id/edit', 
-                    canActivate:[AuthGuardService], 
+                    canActivate:[AuthGuard], 
                     component: EditServerComponent 
                 },
                 {
                     path: ':id', 
-                    canActivate:[AuthGuardService], 
+                    canActivate:[AuthGuard], 
                     component: ServerComponent 
                 }
             ]

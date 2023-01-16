@@ -19,6 +19,6 @@ export class UsersService {
   }
 
   getUserByEmail(email:string):Observable<User[]>{
-    return this.http.get<User[]>(`http://localhost:3000/users/${email}`)
+    return this.http.get<User[]>(`http://localhost:3000/users/?email=${email}`)
   }
 }

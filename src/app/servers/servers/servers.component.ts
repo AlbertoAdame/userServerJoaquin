@@ -12,7 +12,7 @@ export class ServersComponent implements OnInit {
   constructor(private serversService: ServersService, private authService: AuthService) { }
 
   ngOnInit(): void {
-    if(this.authService.loggedIn)
+    if(this.authService.isAuthenticated())
       this.servers = this.serversService.servers;
   }
 

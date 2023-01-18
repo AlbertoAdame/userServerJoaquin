@@ -25,17 +25,34 @@ export class AuthService {
 
 // El método login es lo que deberemos editar para jwt
 
+  // login(email:string, password:string):Observable<boolean> {
+  //   //Recuperamos el usuario y comprobamos que la contraseña sea correcta
+  //   return this.userService.getUserByEmail(email)
+  //   .pipe( switchMap((user=> {
+  //     if (user.length && user[0].password===password){
+  //       localStorage.setItem('authenticated', 'true');
+  //       localStorage.setItem('rol',user[0].rol)
+  //       return of(true)
+  //     }
+  //     else{
+  //       localStorage.setItem('authenticated', 'false');
+  //       return of(false)
+  //     }
+  //   })))
+  // }
+
+
   login(email:string, password:string):Observable<boolean> {
     //Recuperamos el usuario y comprobamos que la contraseña sea correcta
-    return this.userService.getUserByEmail(email)
-    .pipe( switchMap((user=> {
-      if (user.length && user[0].password===password){
-        localStorage.setItem('authenticated', 'true');
-        localStorage.setItem('rol',user[0].rol)
+    return this.userService.getToken(email,password)
+    .pipe( switchMap((token=> {
+      if (token.access_token!=""){
+        localStorage.setItem('Authorization', "Bearer " + token.access_token);
+        // localStorage.setItem('rol',user[0].rol)
         return of(true)
       }
       else{
-        localStorage.setItem('authenticated', 'false');
+        localStorage.setItem('Authorization', '');
         return of(false)
       }
     })))

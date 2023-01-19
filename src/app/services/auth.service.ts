@@ -1,14 +1,23 @@
 import { Injectable } from '@angular/core';
 import { UsersService } from '../users/services/users.service';
-import { Observable, switchMap, of } from 'rxjs';
+import { Observable, switchMap, of, catchError } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Token } from '../servers/interfaces/token.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private userService:UsersService) { }
+  constructor(private userService:UsersService, private cookies:CookieService, private http:HttpClient) { }
 
+  url:string='http://localhost:8000/auth/login';
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+  }
+
+  
   loggedIn = false;
 
   isAuthenticated() {
@@ -20,7 +29,18 @@ export class AuthService {
     //   }
     // );
     // return promise;
-    return localStorage.getItem('authenticated')==='true'
+
+    const httpHeaderJwt = {
+      headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.cookies.get('token')})
+    }
+    
+    return this.http.get('http://localhost:8000/jwt', httpHeaderJwt)
+    .pipe( switchMap(token=> {
+        return of(true)
+    }), catchError (error=>{
+      this.cookies.delete('token');
+      return of(false)
+    }))
   }
 
 // El método login es lo que deberemos editar para jwt
@@ -44,22 +64,19 @@ export class AuthService {
 
   login(email:string, password:string):Observable<boolean> {
     //Recuperamos el usuario y comprobamos que la contraseña sea correcta
-    return this.userService.getToken(email,password)
-    .pipe( switchMap((token=> {
-      if (token.access_token!=""){
-        localStorage.setItem('Authorization', "Bearer " + token.access_token);
-        // localStorage.setItem('rol',user[0].rol)
+    return this.http.post<Token>(this.url, {email,password}, this.httpOptions)
+    .pipe( switchMap(token=> {
+        this.cookies.set('token',  token.access_token);
         return of(true)
-      }
-      else{
-        localStorage.setItem('Authorization', '');
-        return of(false)
-      }
-    })))
+    }), catchError (error=>{
+      this.cookies.delete('token');
+      return of(false)
+    }))
+
   }
 
   logout() {
-    localStorage.setItem('authenticated', 'false')
-    localStorage.removeItem('rol');
+    // localStorage.setItem('authenticated', 'false')
+    this.cookies.delete('token');
   }
 }

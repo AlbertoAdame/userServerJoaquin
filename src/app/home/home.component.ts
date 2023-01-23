@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 
 
@@ -46,7 +47,21 @@ export class HomeComponent implements OnInit {
         else {
           this.email=''; 
           this.password='';
-          confirm('Email o contraseña incorrectos');
+          Swal.fire({
+            title: '! Parece que algo ha fallado !',
+            text: 'Usuario o contraseña incorrectas',
+            width: 900,
+            padding: '3em',
+            color: '#716add',
+            background: '#fff url(https://sweetalert2.github.io/images/trees.png)',
+            backdrop: `
+              rgba(0,0,123,0.4)
+              url("https://sweetalert2.github.io/images/nyan-cat.gif")
+              left top
+              no-repeat
+            `
+          })
+          // confirm('Email o contraseña incorrectos');
         }
       }
     })

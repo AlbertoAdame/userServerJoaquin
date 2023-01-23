@@ -32,7 +32,7 @@ export class AuthService {
 
     const httpHeaderJwt = {
       headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.cookies.get('token')})
-    }
+    } //Esto en principio hay que preguntar pq ya tengo el interceptor, pero no me va si lo quito
     
     return this.http.get('http://localhost:8000/jwt', httpHeaderJwt)
     .pipe( switchMap(token=> {
@@ -67,9 +67,11 @@ export class AuthService {
     return this.http.post<Token>(this.url, {email,password}, this.httpOptions)
     .pipe( switchMap(token=> {
         this.cookies.set('token',  token.access_token);
+        this.cookies.set('rol', token.rol)
         return of(true)
     }), catchError (error=>{
       this.cookies.delete('token');
+      this.cookies.delete('rol');
       return of(false)
     }))
 

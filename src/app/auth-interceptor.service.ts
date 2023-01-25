@@ -3,6 +3,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +11,13 @@ import { Router } from '@angular/router';
 export class AuthInterceptorService implements HttpInterceptor {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private cookies: CookieService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
   
-    const token: string|null = localStorage.getItem('token');
+    const token: string|null = this.cookies.get('token');
 
     let request = req;
 

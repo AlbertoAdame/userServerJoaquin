@@ -30,11 +30,11 @@ export class AuthService {
     // );
     // return promise;
 
-    const httpHeaderJwt = {
-      headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.cookies.get('token')})
-    } //Esto en principio hay que preguntar pq ya tengo el interceptor, pero no me va si lo quito
+    // const httpHeaderJwt = {
+    //   headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.cookies.get('token')})
+    // } //Esto en principio hay que preguntar pq ya tengo el interceptor, pero no me va si lo quito
     
-    return this.http.get('http://localhost:8000/jwt', httpHeaderJwt)
+    return this.http.get('http://localhost:8000/jwt')
     .pipe( switchMap(token=> {
         return of(true)
     }), catchError (error=>{
